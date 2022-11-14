@@ -1,16 +1,14 @@
 plugins {
     id("kotlin-multiplatform")
-    id("org.jetbrains.compose")
     id("com.android.library")
 }
-
 
 val targetSDKVersion: Int by rootProject.extra
 val minSDKVersion: Int by rootProject.extra
 val compileSDKVersion: Int by rootProject.extra
 
 android {
-    namespace = "dev.immathan.quickdrop.ui.welcome"
+    namespace = "dev.immathan.quickdrop.domain.history"
     compileSdk = compileSDKVersion
 
     defaultConfig {
@@ -36,32 +34,34 @@ kotlin {
     android()
 
     sourceSets {
-        named("commonMain") {
+        // shared
+
+        val commonMain by getting {
             dependencies {
                 implementation(projects.data.network)
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(libs.com.arkivanov.decompose)
-                implementation(libs.com.arkivanov.decompose.extensions.compose.jetbrains)
             }
         }
 
-        named("androidMain") {
+
+        // android
+        getByName("androidMain") {
+            dependsOn(commonMain)
             dependencies {
-                // Workaround for https://github.com/JetBrains/compose-jb/issues/2340
-                implementation(libs.androidx.compose.foundation)
             }
         }
 
-        named("desktopMain") {
+
+        // desktop
+        getByName("desktopMain") {
             dependencies {
-                implementation(compose.desktop.common)
             }
         }
-    }
-
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
+        // testing
+        named("commonTest") {
+            dependencies {
+                implementation(libs.org.jetbrains.kotlin.test.common)
+                implementation(libs.org.jetbrains.kotlin.test.annotations.common)
+            }
+        }
     }
 }

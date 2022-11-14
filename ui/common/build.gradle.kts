@@ -10,7 +10,7 @@ val minSDKVersion: Int by rootProject.extra
 val compileSDKVersion: Int by rootProject.extra
 
 android {
-    namespace = "dev.immathan.quickdrop.ui.welcome"
+    namespace = "dev.immathan.quickdrop.ui.common"
     compileSdk = compileSDKVersion
 
     defaultConfig {
